@@ -16,6 +16,9 @@ use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Process\Process;
 
+/**
+ * Class used to call youtube-dl and download videos.
+ */
 class Downloader
 {
 

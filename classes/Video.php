@@ -1,7 +1,7 @@
 <?php
 
 /**
- * VideoDownload class.
+ * Video class.
  */
 
 namespace Alltube\Library;
