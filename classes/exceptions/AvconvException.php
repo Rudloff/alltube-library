@@ -2,8 +2,6 @@
 
 namespace Alltube\Library\Exception;
 
-use Throwable;
-
 /**
  * Can't find avconv or ffmpeg.
  */

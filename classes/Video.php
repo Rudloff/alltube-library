@@ -6,8 +6,10 @@
 
 namespace Alltube\Library;
 
-use Alltube\Library\Exception\AlltubeLibraryException;
 use Alltube\Library\Exception\EmptyUrlException;
+use Alltube\Library\Exception\PasswordException;
+use Alltube\Library\Exception\WrongPasswordException;
+use Alltube\Library\Exception\YoutubedlException;
 use stdClass;
 
 /**
@@ -99,9 +101,9 @@ class Video
      * @param string $prop Property
      *
      * @return string
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getProp($prop = 'dump-json')
     {
@@ -126,9 +128,9 @@ class Video
      * Get all information about a video.
      *
      * @return stdClass Decoded JSON
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getJson()
     {
@@ -145,9 +147,9 @@ class Video
      * @param string $name Property
      *
      * @return mixed
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function __get($name)
     {
@@ -164,9 +166,9 @@ class Video
      * @param string $name Property
      *
      * @return bool
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function __isset($name)
     {
@@ -182,9 +184,9 @@ class Video
      *
      * @return string[] URLs of video
      * @throws EmptyUrlException
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getUrl()
     {
@@ -204,9 +206,9 @@ class Video
      * Get filename of video file from URL of page.
      *
      * @return string Filename of extracted video
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getFilename()
     {
@@ -219,9 +221,9 @@ class Video
      * @param string $extension New file extension
      *
      * @return string Filename of extracted video with specified extension
-     * @throws Exception\PasswordException
-     * @throws Exception\WrongPasswordException
-     * @throws Exception\YoutubedlException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getFileNameWithExtension($extension)
     {
