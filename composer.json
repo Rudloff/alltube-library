@@ -1,32 +1,32 @@
 {
-    "name": "rudloff/alltube-library",
-    "description": "PHP wrapper for youtube-dl",
-    "license": "GPL-3.0-only",
-    "homepage": "http://alltubedownload.net/",
-    "require": {
-        "guzzlehttp/guzzle": "^6.5",
-        "symfony/process": "^4.0|^5.0"
-    },
-    "require-dev": {
-        "phpro/grumphp": "^0.18.0",
-        "phpstan/phpstan": "^0.12.29",
-        "roave/security-advisories": "dev-master",
-        "squizlabs/php_codesniffer": "^3.5",
-        "symfony/var-dumper": "^5.1"
-    },
-    "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "7.3.11"
-        }
-    },
-    "scripts": {
-        "lint": "grumphp run --ansi"
-    },
-    "autoload": {
-        "psr-4": {
-            "Alltube\\Library\\": "classes/",
-            "Alltube\\Library\\Exception\\": "classes/exceptions/"
-        }
+  "name": "rudloff/alltube-library",
+  "description": "PHP wrapper for youtube-dl",
+  "license": "GPL-3.0-only",
+  "homepage": "http://alltubedownload.net/",
+  "require": {
+    "guzzlehttp/guzzle": "^6.5",
+    "symfony/process": "^4.0|^5.0"
+  },
+  "require-dev": {
+    "phpro/grumphp": "^0.18.0",
+    "phpstan/phpstan": "^0.12.29",
+    "roave/security-advisories": "dev-master",
+    "squizlabs/php_codesniffer": "^3.5",
+    "symfony/var-dumper": "^5.1"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "7.3.11"
     }
+  },
+  "scripts": {
+    "lint": "grumphp run --ansi"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alltube\\Library\\": "classes/",
+      "Alltube\\Library\\Exception\\": "classes/exceptions/"
+    }
+  }
 }
