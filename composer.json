@@ -5,7 +5,7 @@
     "homepage": "http://alltubedownload.net/",
     "require": {
         "guzzlehttp/guzzle": "^6.5",
-        "symfony/process": "^5.1"
+        "symfony/process": "^4.0|^5.0"
     },
     "require-dev": {
         "phpro/grumphp": "^0.18.0",
