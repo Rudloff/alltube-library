@@ -126,7 +126,7 @@ class Downloader
      *
      * @return bool False if the command returns an error, true otherwise
      */
-    private static function checkCommand(array $command)
+    public static function checkCommand(array $command)
     {
         $process = new Process($command);
         $process->run();
