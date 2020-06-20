@@ -8,7 +8,8 @@ namespace Alltube\Library\Exception;
 class PopenStreamException extends AlltubeLibraryException
 {
     /**
-     * @var string Error message
+     * Error message.
+     * @var string
      */
     protected $message = 'Could not open popen stream.';
 }

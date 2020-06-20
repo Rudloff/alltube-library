@@ -8,7 +8,8 @@ namespace Alltube\Library\Exception;
 class PlaylistConversionException extends AlltubeLibraryException
 {
     /**
-     * @var string Error message
+     * Error message.
+     * @var string
      */
     protected $message = 'Conversion of playlists is not supported.';
 }

@@ -8,7 +8,8 @@ namespace Alltube\Library\Exception;
 class WrongPasswordException extends AlltubeLibraryException
 {
     /**
-     * @var string Error message.
+     * Error message.
+     * @var string
      */
     protected $message = 'Wrong password.';
 }

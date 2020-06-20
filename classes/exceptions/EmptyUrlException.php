@@ -12,7 +12,8 @@ namespace Alltube\Library\Exception;
 class EmptyUrlException extends AlltubeLibraryException
 {
     /**
-     * @var string Error message
+     * Error message.
+     * @var string
      */
     protected $message = 'youtube-dl returned an empty URL.';
 }
