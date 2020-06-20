@@ -99,7 +99,9 @@ class Video
      * @param string $prop Property
      *
      * @return string
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function getProp($prop = 'dump-json')
     {
@@ -124,8 +126,9 @@ class Video
      * Get all information about a video.
      *
      * @return stdClass Decoded JSON
-     *
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function getJson()
     {
@@ -142,7 +145,9 @@ class Video
      * @param string $name Property
      *
      * @return mixed
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function __get($name)
     {
@@ -159,7 +164,9 @@ class Video
      * @param string $name Property
      *
      * @return bool
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function __isset($name)
     {
@@ -174,7 +181,10 @@ class Video
      * (eg. bestvideo+bestaudio).
      *
      * @return string[] URLs of video
-     * @throws AlltubeLibraryException
+     * @throws EmptyUrlException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function getUrl()
     {
@@ -194,8 +204,9 @@ class Video
      * Get filename of video file from URL of page.
      *
      * @return string Filename of extracted video
-     *
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function getFilename()
     {
@@ -208,7 +219,9 @@ class Video
      * @param string $extension New file extension
      *
      * @return string Filename of extracted video with specified extension
-     * @throws AlltubeLibraryException
+     * @throws Exception\PasswordException
+     * @throws Exception\WrongPasswordException
+     * @throws Exception\YoutubedlException
      */
     public function getFileNameWithExtension($extension)
     {
