@@ -405,6 +405,10 @@ class Downloader
             throw new InvalidProtocolConversionException($video->protocol);
         }
 
+        if (count($video->getUrl()) > 1) {
+            throw new RemuxException('Can not convert and remux at the same time.');
+        }
+
         $avconvProc = $this->getAvconvProcess($video, $audioBitrate, $filetype, $audioOnly, $from, $to);
 
         $stream = popen($avconvProc->getCommandLine(), 'r');
