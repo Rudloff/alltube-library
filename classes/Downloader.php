@@ -235,7 +235,7 @@ class Downloader
             } elseif (substr($errorOutput, 0, 21) == 'ERROR: Wrong password') {
                 throw new WrongPasswordException($errorOutput, $exitCode);
             } else {
-                throw new YoutubedlException($errorOutput, $exitCode);
+                throw new YoutubedlException($process);
             }
         } else {
             return trim($process->getOutput());
