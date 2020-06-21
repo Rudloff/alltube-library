@@ -227,7 +227,11 @@ class Video
      */
     public function getFileNameWithExtension($extension)
     {
-        return str_replace('.' . $this->ext, '.' . $extension, $this->getFilename());
+        if (isset($this->ext)) {
+            return str_replace('.' . $this->ext, '.' . $extension, $this->getFilename());
+        } else {
+            return $this->getFilename() . '.' . $extension;
+        }
     }
 
     /**
