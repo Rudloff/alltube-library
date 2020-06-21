@@ -292,32 +292,10 @@ class Downloader
      *
      * @return resource popen stream
      * @throws AlltubeLibraryException
-     * @throws AvconvException
-     * @throws InvalidProtocolConversionException If you try to convert an M3U or Dash media
-     * @throws PlaylistConversionException If you try to convert a playlist
-     * @throws PopenStreamException If the stream is invalid
      */
     public function getAudioStream(Video $video, $audioBitrate = 128, $from = null, $to = null)
     {
-        if (isset($video->_type) && $video->_type == 'playlist') {
-            throw new PlaylistConversionException();
-        }
-
-        if (isset($video->protocol)) {
-            if (in_array($video->protocol, ['m3u8', 'm3u8_native', 'http_dash_segments'])) {
-                throw new InvalidProtocolConversionException($video->protocol);
-            }
-        }
-
-        $avconvProc = $this->getAvconvProcess($video, $audioBitrate, 'mp3', true, $from, $to);
-
-        $stream = popen($avconvProc->getCommandLine(), 'r');
-
-        if (!is_resource($stream)) {
-            throw new PopenStreamException();
-        }
-
-        return $stream;
+        return $this->getConvertedStream($video, $audioBitrate, 'mp3', true, $from, $to);
     }
 
 
@@ -395,27 +373,39 @@ class Downloader
         return $stream;
     }
 
-
     /**
      * Get the stream of a converted video.
      *
      * @param Video $video Video object
      * @param int $audioBitrate Audio bitrate of the converted file
      * @param string $filetype Filetype of the converted file
+     * @param bool $audioOnly True to return an audio-only file
+     * @param string $from Start the conversion at this time
+     * @param string $to End the conversion at this time
      *
      * @return resource popen stream
      * @throws AlltubeLibraryException
-     * @throws AvconvException
-     * @throws InvalidProtocolConversionException If your try to convert and M3U8 video
      * @throws PopenStreamException If the popen stream was not created correctly
+     * @throws InvalidProtocolConversionException If you try to convert an M3U or Dash media
+     * @throws PlaylistConversionException If you try to convert a playlist
      */
-    public function getConvertedStream(Video $video, $audioBitrate, $filetype)
-    {
-        if (in_array($video->protocol, ['m3u8', 'm3u8_native'])) {
+    public function getConvertedStream(
+        Video $video,
+        $audioBitrate,
+        $filetype,
+        $audioOnly = false,
+        $from = null,
+        $to = null
+    ) {
+        if (isset($video->_type) && $video->_type == 'playlist') {
+            throw new PlaylistConversionException();
+        }
+
+        if (isset($video->protocol) && in_array($video->protocol, ['m3u8', 'm3u8_native', 'http_dash_segments'])) {
             throw new InvalidProtocolConversionException($video->protocol);
         }
 
-        $avconvProc = $this->getAvconvProcess($video, $audioBitrate, $filetype, false);
+        $avconvProc = $this->getAvconvProcess($video, $audioBitrate, $filetype, $audioOnly, $from, $to);
 
         $stream = popen($avconvProc->getCommandLine(), 'r');
 
