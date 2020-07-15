@@ -14,6 +14,8 @@ use Alltube\Library\Exception\WrongPasswordException;
 use Alltube\Library\Exception\YoutubedlException;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 
 /**
@@ -66,6 +68,11 @@ class Downloader
     private $params;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Downloader constructor.
      * @param string $youtubedl youtube-dl binary path
      * @param string[] $params youtube-dl parameters
@@ -88,6 +95,17 @@ class Downloader
         $this->avconv = $avconv;
         $this->phantomjsDir = $phantomjsDir;
         $this->avconvVerbosity = $avconvVerbosity;
+
+        $this->logger = new NullLogger();
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -207,7 +225,10 @@ class Downloader
         $arguments[] = '-user_agent';
         $arguments[] = $video->getProp('dump-user-agent');
 
-        return new Process($arguments);
+        $process = new Process($arguments);
+        $this->logger->debug($process->getCommandLine());
+
+        return $process;
     }
 
 
@@ -226,6 +247,7 @@ class Downloader
         $process = $this->getProcess($arguments);
         //This is needed by the openload extractor because it runs PhantomJS
         $process->setEnv(['PATH' => $this->phantomjsDir]);
+        $this->logger->debug($process->getCommandLine());
         $process->run();
         if (!$process->isSuccessful()) {
             $errorOutput = trim($process->getErrorOutput());
