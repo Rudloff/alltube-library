@@ -4,6 +4,7 @@ namespace Alltube\Library;
 
 use Alltube\Library\Exception\AlltubeLibraryException;
 use Alltube\Library\Exception\AvconvException;
+use Alltube\Library\Exception\EmptyUrlException;
 use Alltube\Library\Exception\InvalidProtocolConversionException;
 use Alltube\Library\Exception\InvalidTimeException;
 use Alltube\Library\Exception\PasswordException;
@@ -111,10 +112,10 @@ class Downloader
     /**
      * @param string $webpageUrl URL of the page containing the video
      * @param string $requestedFormat Requested video format
-     * @param string $password Password
+     * @param string|null $password Password
      * @return Video
      */
-    public function getVideo($webpageUrl, $requestedFormat = 'best/bestvideo', $password = null)
+    public function getVideo(string $webpageUrl, $requestedFormat = 'best/bestvideo', string $password = null)
     {
         return new Video($this, $webpageUrl, $requestedFormat, $password);
     }
@@ -159,21 +160,24 @@ class Downloader
      * @param int $audioBitrate Audio bitrate of the converted file
      * @param string $filetype Filetype of the converted file
      * @param bool $audioOnly True to return an audio-only file
-     * @param string $from Start the conversion at this time
-     * @param string $to End the conversion at this time
+     * @param string|null $from Start the conversion at this time
+     * @param string|null $to End the conversion at this time
      *
      * @return Process<string> Process
-     * @throws AlltubeLibraryException
      * @throws AvconvException If avconv/ffmpeg is missing
+     * @throws EmptyUrlException
      * @throws InvalidTimeException
+     * @throws PasswordException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     private function getAvconvProcess(
         Video $video,
-        $audioBitrate,
+        int $audioBitrate,
         $filetype = 'mp3',
         $audioOnly = true,
-        $from = null,
-        $to = null
+        string $from = null,
+        string $to = null
     ) {
         if (!$this->checkCommand([$this->avconv, '-version'])) {
             throw new AvconvException($this->avconv);
@@ -309,13 +313,22 @@ class Downloader
      *
      * @param Video $video Video object
      * @param int $audioBitrate MP3 bitrate when converting (in kbit/s)
-     * @param string $from Start the conversion at this time
-     * @param string $to End the conversion at this time
+     * @param string|null $from Start the conversion at this time
+     * @param string|null $to End the conversion at this time
      *
      * @return resource popen stream
-     * @throws AlltubeLibraryException
+     * @throws AvconvException
+     * @throws EmptyUrlException
+     * @throws InvalidProtocolConversionException
+     * @throws InvalidTimeException
+     * @throws PasswordException
+     * @throws PlaylistConversionException
+     * @throws PopenStreamException
+     * @throws RemuxException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
-    public function getAudioStream(Video $video, $audioBitrate = 128, $from = null, $to = null)
+    public function getAudioStream(Video $video, $audioBitrate = 128, string $from = null, string $to = null)
     {
         return $this->getConvertedStream($video, $audioBitrate, 'mp3', true, $from, $to);
     }
@@ -402,22 +415,28 @@ class Downloader
      * @param int $audioBitrate Audio bitrate of the converted file
      * @param string $filetype Filetype of the converted file
      * @param bool $audioOnly True to return an audio-only file
-     * @param string $from Start the conversion at this time
-     * @param string $to End the conversion at this time
+     * @param string|null $from Start the conversion at this time
+     * @param string|null $to End the conversion at this time
      *
      * @return resource popen stream
-     * @throws AlltubeLibraryException
-     * @throws PopenStreamException If the popen stream was not created correctly
+     * @throws AvconvException
+     * @throws EmptyUrlException
      * @throws InvalidProtocolConversionException If you try to convert an M3U or Dash media
+     * @throws InvalidTimeException
+     * @throws PasswordException
      * @throws PlaylistConversionException If you try to convert a playlist
+     * @throws PopenStreamException If the popen stream was not created correctly
+     * @throws RemuxException
+     * @throws WrongPasswordException
+     * @throws YoutubedlException
      */
     public function getConvertedStream(
         Video $video,
-        $audioBitrate,
-        $filetype,
+        int $audioBitrate,
+        string $filetype,
         $audioOnly = false,
-        $from = null,
-        $to = null
+        string $from = null,
+        string $to = null
     ) {
         if (isset($video->_type) && $video->_type == 'playlist') {
             throw new PlaylistConversionException();
