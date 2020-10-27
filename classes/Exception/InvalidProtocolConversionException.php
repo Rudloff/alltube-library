@@ -11,7 +11,7 @@ class InvalidProtocolConversionException extends AlltubeLibraryException
      * InvalidProtocolConversionException constructor.
      * @param string $protocol Protocol
      */
-    public function __construct($protocol)
+    public function __construct(string $protocol)
     {
         parent::__construct($protocol . ' protocol is not supported in conversions.');
     }

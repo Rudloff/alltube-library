@@ -81,13 +81,13 @@ class Video
      * @param string $requestedFormat Requested video format
      *                                (can be any format string accepted by youtube-dl,
      *                                including selectors like "[height<=720]")
-     * @param string $password Password
+     * @param string|null $password Password
      */
     public function __construct(
         Downloader $downloader,
-        $webpageUrl,
-        $requestedFormat,
-        $password = null
+        string $webpageUrl,
+        string $requestedFormat,
+        string $password = null
     ) {
         $this->downloader = $downloader;
         $this->webpageUrl = $webpageUrl;
@@ -151,7 +151,7 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if (isset($this->$name)) {
             return $this->getJson()->$name;
@@ -170,7 +170,7 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function __isset($name)
+    public function __isset(string $name)
     {
         return isset($this->getJson()->$name);
     }
@@ -225,7 +225,7 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function getFileNameWithExtension($extension)
+    public function getFileNameWithExtension(string $extension)
     {
         if (isset($this->ext)) {
             return str_replace('.' . $this->ext, '.' . $extension, $this->getFilename());
@@ -278,7 +278,7 @@ class Video
      *
      * @return Video
      */
-    public function withFormat($format)
+    public function withFormat(string $format)
     {
         return new self($this->downloader, $this->webpageUrl, $format, $this->password);
     }
