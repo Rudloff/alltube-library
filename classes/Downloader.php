@@ -477,22 +477,12 @@ class Downloader implements LoggerAwareInterface
         // IDN conversion breaks with Google hosts like https://r3---sn-25glene6.googlevideo.com/.
         $client = new Client(['idn_conversion' => false]);
         $urls = $video->getUrl();
-        $stream_context_options = [];
-
-        if (array_key_exists('Referer', (array)$video->http_headers)) {
-            $stream_context_options = [
-                'http' => [
-                    'header' => 'Referer: ' . $video->http_headers->Referer
-                ]
-            ];
-        }
 
         return $client->request(
             'GET',
             $urls[0],
             [
                 'stream' => true,
-                'stream_context' => $stream_context_options,
                 'headers' => array_merge((array)$video->http_headers, $headers)
             ]
         );
