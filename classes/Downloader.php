@@ -15,15 +15,17 @@ use Alltube\Library\Exception\WrongPasswordException;
 use Alltube\Library\Exception\YoutubedlException;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 
 /**
  * Class used to call youtube-dl and download videos.
  */
-class Downloader
+class Downloader implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
 
     /**
      * youtube-dl binary path.
@@ -69,11 +71,6 @@ class Downloader
     private $params;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * Downloader constructor.
      * @param string $youtubedl youtube-dl binary path
      * @param string[] $params youtube-dl parameters
@@ -101,21 +98,12 @@ class Downloader
     }
 
     /**
-     * @param LoggerInterface $logger
-     * @return void
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
      * @param string $webpageUrl URL of the page containing the video
      * @param string $requestedFormat Requested video format
      * @param string|null $password Password
      * @return Video
      */
-    public function getVideo(string $webpageUrl, $requestedFormat = 'best/bestvideo', string $password = null)
+    public function getVideo(string $webpageUrl, $requestedFormat = 'best/bestvideo', string $password = null): Video
     {
         return new Video($this, $webpageUrl, $requestedFormat, $password);
     }
@@ -127,7 +115,7 @@ class Downloader
      *
      * @return Process<string>
      */
-    private function getProcess(array $arguments)
+    private function getProcess(array $arguments): Process
     {
         return new Process(
             array_merge(
@@ -145,7 +133,7 @@ class Downloader
      *
      * @return bool False if the command returns an error, true otherwise
      */
-    public static function checkCommand(array $command)
+    public static function checkCommand(array $command): bool
     {
         $process = new Process($command);
         $process->run();
@@ -178,7 +166,7 @@ class Downloader
         $audioOnly = true,
         string $from = null,
         string $to = null
-    ) {
+    ): Process {
         if (!$this->checkCommand([$this->avconv, '-version'])) {
             throw new AvconvException($this->avconv);
         }
@@ -246,7 +234,7 @@ class Downloader
      * @throws YoutubedlException If youtube-dl returns an error
      * @throws PasswordException If the video is protected by a password and no password was specified
      */
-    public function callYoutubedl(array $arguments)
+    public function callYoutubedl(array $arguments): string
     {
         $process = $this->getProcess($arguments);
         //This is needed by the openload extractor because it runs PhantomJS
@@ -468,7 +456,7 @@ class Downloader
      *
      * @throws AlltubeLibraryException
      */
-    public function getExtractors()
+    public function getExtractors(): array
     {
         return explode("\n", trim($this->callYoutubedl(['--list-extractors'])));
     }
@@ -484,27 +472,17 @@ class Downloader
      * @throws AlltubeLibraryException
      * @link https://github.com/guzzle/guzzle/issues/2640
      */
-    public function getHttpResponse(Video $video, array $headers = [])
+    public function getHttpResponse(Video $video, array $headers = []): ResponseInterface
     {
         // IDN conversion breaks with Google hosts like https://r3---sn-25glene6.googlevideo.com/.
         $client = new Client(['idn_conversion' => false]);
         $urls = $video->getUrl();
-        $stream_context_options = [];
-
-        if (array_key_exists('Referer', (array)$video->http_headers)) {
-            $stream_context_options = [
-                'http' => [
-                    'header' => 'Referer: ' . $video->http_headers->Referer
-                ]
-            ];
-        }
 
         return $client->request(
             'GET',
             $urls[0],
             [
                 'stream' => true,
-                'stream_context' => $stream_context_options,
                 'headers' => array_merge((array)$video->http_headers, $headers)
             ]
         );
