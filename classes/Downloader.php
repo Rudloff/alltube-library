@@ -470,12 +470,10 @@ class Downloader implements LoggerAwareInterface
      *
      * @return ResponseInterface
      * @throws AlltubeLibraryException
-     * @link https://github.com/guzzle/guzzle/issues/2640
      */
     public function getHttpResponse(Video $video, array $headers = []): ResponseInterface
     {
-        // IDN conversion breaks with Google hosts like https://r3---sn-25glene6.googlevideo.com/.
-        $client = new Client(['idn_conversion' => false]);
+        $client = new Client();
 
         return $client->request(
             'GET',
