@@ -13,8 +13,8 @@ use Alltube\Library\Exception\PopenStreamException;
 use Alltube\Library\Exception\RemuxException;
 use Alltube\Library\Exception\WrongPasswordException;
 use Alltube\Library\Exception\YoutubedlException;
-use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
+use Nyholm\Psr7\Request;
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -461,27 +461,16 @@ class Downloader implements LoggerAwareInterface
         return explode("\n", trim($this->callYoutubedl(['--list-extractors'])));
     }
 
-
     /**
-     * Get a HTTP response containing the video.
+     * Get an HTTP request downloading the video.
      *
      * @param Video $video Video object
-     * @param mixed[] $headers HTTP headers of the request
+     * @param string[] $headers HTTP headers of the request
      *
-     * @return ResponseInterface
-     * @throws AlltubeLibraryException
+     * @return RequestInterface
      */
-    public function getHttpResponse(Video $video, array $headers = []): ResponseInterface
+    public function getHttpRequest(Video $video, array $headers = []): RequestInterface
     {
-        $client = new Client();
-
-        return $client->request(
-            'GET',
-            $video->url,
-            [
-                'stream' => true,
-                'headers' => array_merge((array)$video->http_headers, $headers)
-            ]
-        );
+        return new Request('GET', $video->url, array_merge((array)$video->http_headers, $headers));
     }
 }

@@ -5,7 +5,7 @@
   "homepage": "http://alltubedownload.net/",
   "require": {
     "ext-json": "*",
-    "guzzlehttp/guzzle": "^6.5",
+    "nyholm/psr7": "^1.4",
     "psr/log": "^1.1",
     "symfony/process": "^4.0|^5.0"
   },
