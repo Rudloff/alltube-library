@@ -80,12 +80,12 @@ class Downloader implements LoggerAwareInterface
      * @param string $avconvVerbosity avconv/ffmpeg logging level
      */
     public function __construct(
-        $youtubedl = '/usr/bin/youtube-dl',
+        string $youtubedl = '/usr/bin/youtube-dl',
         array $params = ['--no-warnings'],
-        $python = '/usr/bin/python3',
-        $avconv = '/usr/bin/ffmpeg',
-        $phantomjsDir = '/usr/bin/',
-        $avconvVerbosity = 'error'
+        string $python = '/usr/bin/python3',
+        string $avconv = '/usr/bin/ffmpeg',
+        string $phantomjsDir = '/usr/bin/',
+        string $avconvVerbosity = 'error'
     ) {
         $this->youtubedl = $youtubedl;
         $this->params = $params;
@@ -162,8 +162,8 @@ class Downloader implements LoggerAwareInterface
     private function getAvconvProcess(
         Video $video,
         int $audioBitrate,
-        $filetype = 'mp3',
-        $audioOnly = true,
+        string $filetype = 'mp3',
+        bool $audioOnly = true,
         string $from = null,
         string $to = null
     ): Process {
@@ -218,7 +218,10 @@ class Downloader implements LoggerAwareInterface
         $arguments[] = $video->getProp('dump-user-agent');
 
         $process = new Process($arguments);
-        $this->logger->debug($process->getCommandLine());
+
+        if (isset($this->logger)) {
+            $this->logger->debug($process->getCommandLine());
+        }
 
         return $process;
     }
@@ -239,7 +242,11 @@ class Downloader implements LoggerAwareInterface
         $process = $this->getProcess($arguments);
         //This is needed by the openload extractor because it runs PhantomJS
         $process->setEnv(['PATH' => $this->phantomjsDir]);
-        $this->logger->debug($process->getCommandLine());
+
+        if (isset($this->logger)) {
+            $this->logger->debug($process->getCommandLine());
+        }
+
         $process->run();
         if (!$process->isSuccessful()) {
             $errorOutput = trim($process->getErrorOutput());
@@ -422,7 +429,7 @@ class Downloader implements LoggerAwareInterface
         Video $video,
         int $audioBitrate,
         string $filetype,
-        $audioOnly = false,
+        bool $audioOnly = false,
         string $from = null,
         string $to = null
     ) {

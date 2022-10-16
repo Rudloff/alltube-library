@@ -7,6 +7,7 @@
 namespace Alltube\Library;
 
 use Alltube\Library\Exception\EmptyUrlException;
+use Alltube\Library\Exception\InvalidJsonException;
 use Alltube\Library\Exception\PasswordException;
 use Alltube\Library\Exception\WrongPasswordException;
 use Alltube\Library\Exception\YoutubedlException;
@@ -55,14 +56,14 @@ class Video
     /**
      * JSON object returned by youtube-dl.
      *
-     * @var stdClass
+     * @var stdClass|null
      */
     private $json;
 
     /**
      * URLs of the video files.
      *
-     * @var string[]
+     * @var string[]|null
      */
     private $urls;
 
@@ -105,14 +106,14 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function getProp($prop = 'dump-json')
+    public function getProp(string $prop = 'dump-json'): string
     {
         $arguments = ['--' . $prop];
 
-        if (isset($this->webpageUrl)) {
+        if (!empty($this->webpageUrl)) {
             $arguments[] = $this->webpageUrl;
         }
-        if (isset($this->requestedFormat)) {
+        if (!empty($this->requestedFormat)) {
             $arguments[] = '-f';
             $arguments[] = $this->requestedFormat;
         }
@@ -131,11 +132,18 @@ class Video
      * @throws PasswordException
      * @throws WrongPasswordException
      * @throws YoutubedlException
+     * @throws InvalidJsonException
      */
-    public function getJson()
+    public function getJson(): stdClass
     {
         if (!isset($this->json)) {
-            $this->json = json_decode($this->getProp('dump-single-json'));
+            $json = json_decode($this->getProp('dump-single-json'));
+
+            if ($json instanceof stdClass) {
+                $this->json = $json;
+            } else {
+                throw new InvalidJsonException('Invalid JSON returned by youtube-dl');
+            }
         }
 
         return $this->json;
@@ -150,6 +158,7 @@ class Video
      * @throws PasswordException
      * @throws WrongPasswordException
      * @throws YoutubedlException
+     * @throws InvalidJsonException
      */
     public function __get(string $name)
     {
@@ -169,6 +178,7 @@ class Video
      * @throws PasswordException
      * @throws WrongPasswordException
      * @throws YoutubedlException
+     * @throws InvalidJsonException
      */
     public function __isset(string $name)
     {
@@ -210,7 +220,7 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return trim($this->getProp('get-filename'));
     }
@@ -225,7 +235,7 @@ class Video
      * @throws WrongPasswordException
      * @throws YoutubedlException
      */
-    public function getFileNameWithExtension(string $extension)
+    public function getFileNameWithExtension(string $extension): string
     {
         if (isset($this->ext)) {
             return str_replace('.' . $this->ext, '.' . $extension, $this->getFilename());
@@ -239,7 +249,7 @@ class Video
      *
      * @return string[] Arguments
      */
-    public function getRtmpArguments()
+    public function getRtmpArguments(): array
     {
         $arguments = [];
 
@@ -278,7 +288,7 @@ class Video
      *
      * @return Video
      */
-    public function withFormat(string $format)
+    public function withFormat(string $format): Video
     {
         return new self($this->downloader, $this->webpageUrl, $format, $this->password);
     }
