@@ -20,6 +20,9 @@
     "sort-packages": true,
     "platform": {
       "php": "7.3.11"
+    },
+    "allow-plugins": {
+      "phpro/grumphp": true
     }
   },
   "scripts": {
