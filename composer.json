@@ -2,7 +2,6 @@
   "name": "rudloff/alltube-library",
   "description": "PHP wrapper for youtube-dl",
   "license": "GPL-3.0-only",
-  "homepage": "http://alltubedownload.net/",
   "require": {
     "ext-json": "*",
     "nyholm/psr7": "^1.4",
