@@ -1,6 +1,8 @@
 ---
-parameters:
-  ascii: ~
+grumphp:
+  ascii:
+    succeeded: ~
+    failed: ~
   tasks:
     jsonlint: ~
     xmllint: ~

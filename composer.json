@@ -10,8 +10,8 @@
     "symfony/process": "^4.0|^5.0"
   },
   "require-dev": {
-    "phpro/grumphp": "^0.18.0",
-    "phpstan/phpstan": "^0.12.29",
+    "phpro/grumphp": "^1.5",
+    "phpstan/phpstan": "^1.8",
     "roave/security-advisories": "dev-master",
     "squizlabs/php_codesniffer": "^3.5",
     "symfony/var-dumper": "^5.1"
